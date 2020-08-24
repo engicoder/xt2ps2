@@ -1,4 +1,4 @@
-# XT2PS2
+# xt2ps2
 Hardware and software that enable the IBM Model F PC/XT keyboard to communicate with PS/2 hosts.
 
 ### Some History: PC/XT to AT to PS/2
