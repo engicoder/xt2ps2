@@ -1,0 +1,283 @@
+# depslib dependency file v1.0
+1534632568 source:e:\onedrive\development\keyboards\converters\xt2ps2\console_host\main.c
+	<stdint.h>
+	<stdbool.h>
+	<stdio.h>
+	<stdlib.h>
+	<unistd.h>
+	<windows.h>
+	<windef.h>
+	<winnt.h>
+	<winbase.h>
+	"ftd2xx.h"
+	<string.h>
+	"getopt.h"
+	"console.h"
+	"console_expansion.h"
+	"con_exp_test.h"
+	"con_exp_xth_xcvr.h"
+	"con_exp_xth_kbd.h"
+	"con_exp_ps2d_kbd.h"
+	"con_exp_ps2d_xcvr.h"
+	"con_exp_xt2ps2.h"
+
+1296080978 e:\onedrive\development\keyboards\converters\xt2ps2\console_host\ftd2xx.h
+
+1533941742 e:\onedrive\development\keyboards\converters\xt2ps2\console_host\getopt.h
+
+1534635978 e:\onedrive\development\keyboards\converters\xt2ps2\common\console\console.h
+	<stdbool.h>
+	<stdint.h>
+	"circular_buffer.h"
+	"console_source.h"
+	"console_msg.h"
+
+1534790365 e:\onedrive\development\keyboards\converters\xt2ps2\common\util\circular_buffer.h
+	<stdint.h>
+	<stdbool.h>
+
+1534373520 e:\onedrive\development\keyboards\converters\xt2ps2\common\console\console_source.h
+
+1534035624 e:\onedrive\development\keyboards\converters\xt2ps2\common\xt\xth_xcvr_con_exp.h
+	"console_expansion.h"
+
+1534191460 e:\onedrive\development\keyboards\converters\xt2ps2\console_host\console_expansion.h
+	"console.h"
+
+1534132367 source:e:\onedrive\development\keyboards\converters\xt2ps2\common\xt\xth_xcvr_con_exp.c
+	<stdio.h>
+	"console_expansion.h"
+	"xth_xcvr_console.h"
+
+1533915444 e:\onedrive\development\keyboards\converters\xt2ps2\common\xt\xth_xcvr_console.h
+
+1535219326 source:e:\onedrive\development\keyboards\converters\xt2ps2\console_host\console_expansion.c
+	<stdio.h>
+	<stdint.h>
+	<stdbool.h>
+	<stdlib.h>
+	<windows.h>
+	<windef.h>
+	<winnt.h>
+	<winbase.h>
+	<string.h>
+	<math.h>
+	<sys/time.h>
+	"console.h"
+	"console_expansion.h"
+
+1534208992 source:e:\onedrive\development\keyboards\converters\xt2ps2\console_host\xth_xcvr_con_exp.c
+	<stdio.h>
+	"console_expansion.h"
+	"xth_xcvr_con_msg.h"
+
+1534278791 e:\onedrive\development\keyboards\converters\xt2ps2\common\console\console_msg.h
+	<stdint.h>
+
+1534192907 e:\onedrive\development\keyboards\converters\xt2ps2\console_host\xth_xcvr_con_exp.h
+	"console_expansion.h"
+
+1534262191 e:\onedrive\development\keyboards\converters\xt2ps2\common\xt\xth_xcvr_con_msg.h
+
+1534277044 e:\onedrive\development\keyboards\converters\xt2ps2\console_host\con_exp_test.h
+	"console_expansion.h"
+
+1534277686 source:e:\onedrive\development\keyboards\converters\xt2ps2\console_host\con_exp_test.c
+	<stdio.h>
+	"console_expansion.h"
+	"con_exp_test.h"
+	"con_msg_test.h"
+
+1534277055 e:\onedrive\development\keyboards\converters\xt2ps2\console_host\con_msg_test.h
+
+1535220362 source:e:\onedrive\development\keyboards\converters\xt2ps2\console_host\con_exp_xth_xcvr.c
+	<stdio.h>
+	"console_expansion.h"
+	"con_msg_xth_xcvr.h"
+
+1534281911 e:\onedrive\development\keyboards\converters\xt2ps2\common\xt\con_msg_xth_xcvr.h
+
+1534281204 source:e:\onedrive\development\keyboards\converters\xt2ps2\console_host\con_exp_xth_kbd.c
+	<stdio.h>
+	"console_expansion.h"
+	"con_exp_xth_kbd.h"
+	"con_msg_xth_kbd.h"
+
+1534278350 e:\onedrive\development\keyboards\converters\xt2ps2\console_host\con_exp_xth_kbd.h
+	"console_expansion.h"
+
+1534278511 e:\onedrive\development\keyboards\converters\xt2ps2\common\xt\con_msg_xth_kbd.h
+
+1534278174 e:\onedrive\development\keyboards\converters\xt2ps2\console_host\con_exp_xth_xcvr.h
+	"console_expansion.h"
+
+1534283088 e:\onedrive\development\keyboards\converters\xt2ps2\console_host\con_exp_ps2d_kbd.h
+	"console_expansion.h"
+
+1535220277 source:e:\onedrive\development\keyboards\converters\xt2ps2\console_host\con_exp_ps2d_kbd.c
+	<stdio.h>
+	"console_expansion.h"
+	"con_exp_ps2d_kbd.h"
+	"con_msg_ps2d_kbd.h"
+
+1534790453 e:\onedrive\development\keyboards\converters\xt2ps2\common\ps2\con_msg_ps2d_kbd.h
+
+1534283845 e:\onedrive\development\keyboards\converters\xt2ps2\console_host\con_exp_ps2d_xcvr.h
+	"console_expansion.h"
+
+1534523852 source:e:\onedrive\development\keyboards\converters\xt2ps2\console_host\con_exp_ps2d_xcvr.c
+	<stdio.h>
+	"console_expansion.h"
+	"con_exp_ps2d_xcvr.h"
+	"con_msg_ps2d_xcvr.h"
+
+1534519231 e:\onedrive\development\keyboards\converters\xt2ps2\common\ps2\con_msg_ps2d_xcvr.h
+
+1534797481 source:e:\onedrive\development\keyboards\converters\xt2ps2\console_host\con_exp_xt2ps2.c
+	<stdio.h>
+	"console_expansion.h"
+	"con_exp_xt2ps2.h"
+	"con_msg_xt2ps2.h"
+
+1534629797 e:\onedrive\development\keyboards\converters\xt2ps2\console_host\con_exp_xt2ps2.h
+	"console_expansion.h"
+
+1534629902 e:\onedrive\development\keyboards\converters\xt2ps2\common\xt2ps2\con_msg_xt2ps2.h
+
+1597186228 source:c:\dev\xfer\xt2ps2\console_host\con_exp_ps2d_kbd.c
+	<stdio.h>
+	"console_expansion.h"
+	"con_exp_ps2d_kbd.h"
+	"con_msg_ps2d_kbd.h"
+
+1598287421 c:\dev\xfer\xt2ps2\console_host\console_expansion.h
+	"console.h"
+
+1598287421 c:\dev\xfer\xt2ps2\common\console\console.h
+	<stdbool.h>
+	<stdint.h>
+	"circular_buffer.h"
+	"console_source.h"
+	"console_msg.h"
+
+1598287421 c:\dev\xfer\xt2ps2\common\util\circular_buffer.h
+	<stdint.h>
+	<stdbool.h>
+
+1598287421 c:\dev\xfer\xt2ps2\common\console\console_source.h
+
+1598287421 c:\dev\xfer\xt2ps2\common\console\console_msg.h
+	<stdint.h>
+
+1598287421 c:\dev\xfer\xt2ps2\console_host\con_exp_ps2d_kbd.h
+	"console_expansion.h"
+
+1598287421 c:\dev\xfer\xt2ps2\common\ps2\con_msg_ps2d_kbd.h
+
+1597262652 source:c:\dev\xfer\xt2ps2\console_host\con_exp_ps2d_xcvr.c
+	<stdio.h>
+	"console_expansion.h"
+	"con_exp_ps2d_xcvr.h"
+	"con_msg_ps2d_xcvr.h"
+
+1598287421 c:\dev\xfer\xt2ps2\console_host\con_exp_ps2d_xcvr.h
+	"console_expansion.h"
+
+1598287421 c:\dev\xfer\xt2ps2\common\ps2\con_msg_ps2d_xcvr.h
+
+1598287421 source:c:\dev\xfer\xt2ps2\console_host\con_exp_test.c
+	<stdio.h>
+	"console_expansion.h"
+	"con_exp_test.h"
+	"con_msg_test.h"
+
+1598287421 c:\dev\xfer\xt2ps2\console_host\con_exp_test.h
+	"console_expansion.h"
+
+1598287421 c:\dev\xfer\xt2ps2\console_host\con_msg_test.h
+
+1598287421 source:c:\dev\xfer\xt2ps2\console_host\con_exp_xt2ps2.c
+	<stdio.h>
+	"console_expansion.h"
+	"con_exp_xt2ps2.h"
+	"con_msg_xt2ps2.h"
+
+1598287421 c:\dev\xfer\xt2ps2\console_host\con_exp_xt2ps2.h
+	"console_expansion.h"
+
+1598287421 c:\dev\xfer\xt2ps2\common\xt2ps2\con_msg_xt2ps2.h
+
+1598287421 source:c:\dev\xfer\xt2ps2\console_host\con_exp_xth_kbd.c
+	<stdio.h>
+	"console_expansion.h"
+	"con_exp_xth_kbd.h"
+	"con_msg_xth_kbd.h"
+
+1598287421 c:\dev\xfer\xt2ps2\console_host\con_exp_xth_kbd.h
+	"console_expansion.h"
+
+1598287421 c:\dev\xfer\xt2ps2\common\xt\con_msg_xth_kbd.h
+
+1598287421 source:c:\dev\xfer\xt2ps2\console_host\con_exp_xth_xcvr.c
+	<stdio.h>
+	"console_expansion.h"
+	"con_msg_xth_xcvr.h"
+
+1598287421 c:\dev\xfer\xt2ps2\common\xt\con_msg_xth_xcvr.h
+
+1598294336 source:c:\dev\xfer\xt2ps2\console_host\main.c
+	<stdint.h>
+	<stdbool.h>
+	<stdio.h>
+	<stdlib.h>
+	<unistd.h>
+	<windows.h>
+	<windef.h>
+	<winnt.h>
+	<winbase.h>
+	"ftd2xx.h"
+	<string.h>
+	"getopt.h"
+	"console.h"
+	"console_expansion.h"
+	"con_exp_test.h"
+	"con_exp_xth_xcvr.h"
+	"con_exp_xth_kbd.h"
+	"con_exp_ps2d_kbd.h"
+	"con_exp_ps2d_xcvr.h"
+	"con_exp_xt2ps2.h"
+	"con_exp_keymap.h"
+
+1598287421 c:\dev\xfer\xt2ps2\console_host\ftd2xx.h
+
+1598287421 c:\dev\xfer\xt2ps2\console_host\getopt.h
+
+1598287421 c:\dev\xfer\xt2ps2\console_host\con_exp_xth_xcvr.h
+	"console_expansion.h"
+
+1598291989 source:c:\dev\xfer\xt2ps2\console_host\console_expansion.c
+	<stdio.h>
+	<stdint.h>
+	<stdbool.h>
+	<stdlib.h>
+	<windows.h>
+	<windef.h>
+	<winnt.h>
+	<winbase.h>
+	<string.h>
+	<math.h>
+	<sys/time.h>
+	"console.h"
+	"console_expansion.h"
+
+1598295865 source:c:\dev\xfer\xt2ps2\console_host\con_exp_keymap.c
+	<stdio.h>
+	"console_expansion.h"
+	"con_exp_keymap.h"
+	"con_msg_keymap.h"
+
+1598291331 c:\dev\xfer\xt2ps2\console_host\con_exp_keymap.h
+	"console_expansion.h"
+
+1598287421 c:\dev\xfer\xt2ps2\common\keymap\con_msg_keymap.h
+

@@ -1,0 +1,38 @@
+{
+    "configurations": [
+        {
+            "name": "avr-gcc",
+            "browse": {
+                "path": [
+                    "${workspaceFolder}",
+                    "E:\\Program Files (x86)\\Atmel\\Studio\\7.0\\toolchain"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "includePath": [
+                "${workspaceFolder}/**",
+                "E:/Program Files (x86)/Atmel/Studio/7.0/toolchain/avr8/avr8-gnu-toolchain/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "ARCH=AVR8",
+                "__AVR_ATmega32U4__",
+                "CONFIG_H=config_console_nano.h",
+                "USE_CONSOLE",
+                "USE_BOARD",
+                "F_CPU=16000000",
+                "CLK_PRESCALER=8",
+                "USE_TYPEMATIC"
+
+
+            ],
+            "compilerPath": "E:/Program Files (x86)/Atmel/Studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "msvc-x64"
+        }
+    ],
+    "version": 4
+}

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="console_host" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/console_host" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-DUSE_CONSOLE" />
+			<Add directory="../console_host" />
+			<Add directory="../common" />
+			<Add directory="../common/console" />
+			<Add directory="../common/xt" />
+			<Add directory="../common/util" />
+			<Add directory="../common/ps2" />
+			<Add directory="../common/xt2ps2" />
+			<Add directory="../common/keymap" />
+		</Compiler>
+		<Linker>
+			<Add library="C:/dev/xfer/xt2ps2/console_host/ftd2xx.lib" />
+		</Linker>
+		<Unit filename="../common/console/con_msg_test.h" />
+		<Unit filename="../common/console/console.h" />
+		<Unit filename="../common/console/console_msg.h" />
+		<Unit filename="../common/console/console_source.h" />
+		<Unit filename="../common/keymap/con_msg_keymap.h" />
+		<Unit filename="../common/ps2/con_msg_ps2d_kbd.h" />
+		<Unit filename="../common/ps2/con_msg_ps2d_xcvr.h" />
+		<Unit filename="../common/xt2ps2/con_msg_xt2ps2.h" />
+		<Unit filename="../common/xt/xth_xcvr_con_exp.h" />
+		<Unit filename="../common/xt/xth_xcvr_con_msg.h" />
+		<Unit filename="con_exp_keymap.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="con_exp_keymap.h" />
+		<Unit filename="con_exp_ps2d_kbd.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="con_exp_ps2d_kbd.h" />
+		<Unit filename="con_exp_ps2d_xcvr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="con_exp_ps2d_xcvr.h" />
+		<Unit filename="con_exp_test.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="con_exp_test.h" />
+		<Unit filename="con_exp_xt2ps2.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="con_exp_xt2ps2.h" />
+		<Unit filename="con_exp_xth_kbd.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="con_exp_xth_kbd.h" />
+		<Unit filename="con_exp_xth_xcvr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="con_exp_xth_xcvr.h" />
+		<Unit filename="con_msg_test.h" />
+		<Unit filename="console_expansion.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="console_expansion.h" />
+		<Unit filename="ftd2xx.h" />
+		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
