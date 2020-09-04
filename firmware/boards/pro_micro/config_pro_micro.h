@@ -23,7 +23,7 @@
 #define XTH_XCVR_CLOCK_BIT  1
 
 // XT Clock interrupt vector
-#define XTH_XCVR_CLOCK_INTERRUPT_VECTOR INT0_vect
+#define XTH_XCVR_CLOCK_INTERRUPT_VECTOR INT1_vect
 
 // XT Data on PD1
 #define XTH_XCVR_DATA_PORT PORTD
