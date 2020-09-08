@@ -58,6 +58,11 @@ void Console_Flush(void)
 
 }
 
+bool Console_PowerDetected(void)
+{
+    return ConsoleHal_PowerDetected();
+}
+
 
 void Console_Send0(ConsoleSource source, ConsoleSeverity severity, uint8_t messageId)
 {

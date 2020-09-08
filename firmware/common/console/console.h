@@ -45,6 +45,7 @@ extern uint8_t severityFlags;
 void Console_Init(ConsoleSeverity severity);
 void Console_Update(void);
 void Console_Flush(void);
+bool Console_PowerDetected(void);
 
 static inline void Console_SeveritySet(ConsoleSeverity severity)
 {
@@ -82,6 +83,7 @@ void Console_Send8816(ConsoleSource source, ConsoleSeverity severity, uint8_t me
 static inline void Console_Init(ConsoleSeverity severity) { (void)severity; }
 static inline void Console_Update(void) {}
 static inline void Console_Flush(void) {}
+static inline bool Console_PowerDetected(void) { return true;}
 
 #define CONSOLE_SEND0(source, severity, messageId)
 #define CONSOLE_SEND8(source, severity, messageId, data)

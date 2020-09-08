@@ -21,6 +21,8 @@ static inline void ConsoleHal_Init(void);
 static inline bool ConsoleHal_TrySend(uint8_t data);
 static inline bool ConsoleHal_Send(uint8_t data);
 
+static inline bool ConsoleHal_PowerDetected(void);
+
 /* Include the appropriate HAL implementation */
 #if ARCH == AVR8
 #include "console_hal_avr.h"

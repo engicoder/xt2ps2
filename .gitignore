@@ -8,6 +8,10 @@
 *.gch
 *.pch
 
+# List files
+*.lst
+*.d
+
 # Libraries
 *.lib
 *.a
@@ -30,3 +34,6 @@
 
 # Debug files
 *.dSYM/
+
+# build directory
+firmware/build

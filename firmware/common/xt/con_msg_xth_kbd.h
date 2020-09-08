@@ -4,7 +4,7 @@
 
 typedef enum _ConsoleMessageIdXthKbd
 {
-    CON_MSG_XTH_KBD_BAD_START_BIT,
+    CON_MSG_XTH_KBD_RECV_OVERFLOW,
     CON_MSG_XTH_KBD_DETECTED,
     
 } ConsoleMessageIdXthKbd;

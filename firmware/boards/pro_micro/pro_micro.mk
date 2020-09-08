@@ -1,4 +1,4 @@
-USE_CONSOLE = yes
+USE_CONSOLE = no
 USE_TYPEMATIC = yes
 
 # Target device

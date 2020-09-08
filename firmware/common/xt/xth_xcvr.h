@@ -36,7 +36,7 @@ typedef enum
     XTH_XCVR_STATUS_KBD_DETECTED           = (1 << 0),
     XTH_XCVR_STATUS_READY                  = (1 << 1),
     XTH_XCVR_STATUS_RECV_BUFFER_FULL       = (1 << 3),
-    XTH_XCVR_STATUS_RECV_FRAME_ERROR       = (1 << 4),
+    XTH_XCVR_STATUS_RECV_OVERFLOW          = (1 << 4),
 }XthXcvrStatus;
 
 extern volatile XthXcvrStatus _xthXcvrStatus;
@@ -66,9 +66,9 @@ static inline bool XthXcvr_StatusKeyboardDetected(void)
     return XthXcvr_StatusIsSet(XTH_XCVR_STATUS_KBD_DETECTED);
 }
 
-static inline bool XthXcvr_StatusIsError(void)
+static inline bool XthXcvr_StatusIsOverflow(void)
 {
-	return XthXcvr_StatusIsSet(XTH_XCVR_STATUS_RECV_FRAME_ERROR);  
+	return XthXcvr_StatusIsSet(XTH_XCVR_STATUS_RECV_OVERFLOW);  
 }
 
 /* -----------------------------------------------------------------------

@@ -73,9 +73,9 @@ void XthKbd_Task(void)
         }
     }
 
-    if (XthXcvr_StatusIsError())
+    if (XthXcvr_StatusIsOverflow())
     {
-        CONSOLE_SEND0(CON_SRC_XTH_KBD, CON_SEV_TRACE_EVENT, CON_MSG_XTH_KBD_BAD_START_BIT);
+        CONSOLE_SEND0(CON_SRC_XTH_KBD, CON_SEV_TRACE_EVENT, CON_MSG_XTH_KBD_RECV_OVERFLOW);
         _errorCount++;
         if (_errorCount > XTH_KBD_ERROR_THRESHOLD)
         {

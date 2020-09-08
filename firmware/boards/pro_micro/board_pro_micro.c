@@ -7,37 +7,40 @@
 #include "board.h"
 #include "config.h"
 
+#define TX_LED_PORT PORTD
+#define TX_LED_DDR DDRD
+#define TX_LED_PIN PD5
 
-#define KEY_PRESS_PORT PORTB
-#define KEY_PRESS_DDR  DDRB
-#define KEY_PRESS_PIN  PB0
+#define RX_LED_PORT PORTB
+#define RX_LED_DDR  DDRB
+#define RX_LED_PIN  PB0
 
 void Board_Init(void)
 {
-    /* Configure power detect pin as and input */
-    BOARD_POWER_DETECT_DDR  &= ~(1 << BOARD_POWER_DETECT_BIT);
+    /* Set RX_LED as output for used with key press */
+    RX_LED_PORT |= (1 << RX_LED_PIN);
+    RX_LED_DDR |= (1 << RX_LED_PIN);
 
-    /* Turn off internal pullup */
-    BOARD_POWER_DETECT_PORT &= ~(1 << BOARD_POWER_DETECT_BIT); 	    
-
-    KEY_PRESS_PORT |= (1 << KEY_PRESS_PIN);
-    KEY_PRESS_DDR |= (1 << KEY_PRESS_PIN);
-
+    /* Set TX_LED as output for use with caps lock */
+    TX_LED_PORT |= (1 << TX_LED_PIN);
+    TX_LED_DDR |= (1 << TX_LED_PIN);
 }
 
 void Board_KeyPressed(void) 
 {
-    KEY_PRESS_PORT &= ~(1 << KEY_PRESS_PIN);
+    RX_LED_PORT &= ~(1 << RX_LED_PIN);
 }
 
 void Board_KeyReleased(void)
 {
-    KEY_PRESS_PORT |= (1 << KEY_PRESS_PIN);
+    RX_LED_PORT |= (1 << RX_LED_PIN);
 }
 
-void Board_UpdateLedStatus(LedStatus status) {}
-
-bool Board_PowerDetected(void)
+void Board_UpdateLedStatus(LedStatus status) 
 {
-	return ((BOARD_POWER_DETECT_PINS & (1 << BOARD_POWER_DETECT_BIT)) != 0);
+    if (status & LedStatusCapsLock)
+        TX_LED_DDR &= ~(1 << TX_LED_PIN);
+    else
+        TX_LED_DDR |= (1 << TX_LED_PIN);
 }
+

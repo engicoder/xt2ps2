@@ -121,21 +121,12 @@ static inline void XthXcvrHal_ResetHoldLow(void);
 
 /* -----------------------------------------------------------------------
 * Description:
-*  Initialize utility timer 
-*
-* Returns:
-*  n/a
-* . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . */
-static inline void XthXcvrHal_TimerInit(void);
-
-/* -----------------------------------------------------------------------
-* Description:
 *  Start the timer with configuration to detect start of data frame
 *
 * Returns:
 *  n/a
 * . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . */
-static inline void XthXcvrHal_TimerStartDetectSof(void);
+static inline void XthXcvrHal_TimerSofStart(void);
 
 
 /* -----------------------------------------------------------------------
@@ -145,7 +136,7 @@ static inline void XthXcvrHal_TimerStartDetectSof(void);
 * Returns:
 *  n/a
 * . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . */
-static inline void XthXcvrHal_TimerStartTimeout(void);
+static inline void XthXcvrHal_TimerResetStart(void);
 
 /* -----------------------------------------------------------------------
 * Description:
@@ -163,7 +154,7 @@ static inline void XthXcvrHal_TimerStop(void);
 * Returns:
 *  n/a
 * . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . */
-static inline void XthXcvrHal_TimerResetCount(void);
+static inline void XthXcvrHal_TimerSofCountReset(void);
 
 /* -----------------------------------------------------------------------
 * Description:
@@ -172,7 +163,7 @@ static inline void XthXcvrHal_TimerResetCount(void);
 * Returns: uint8_t
 *  The current timer count
 * . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . */
-static inline uint8_t XthXcvrHal_TimerCount(void);
+static inline uint16_t XthXcvrHal_TimerSofCount(void);
 
 
 /* -----------------------------------------------------------------------
@@ -182,7 +173,7 @@ static inline uint8_t XthXcvrHal_TimerCount(void);
 * Returns: bool
 *  true if the timer overflowed
 * . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . */
-static inline bool XthXcvrHal_TimerOverflow(void);
+static inline bool XthXcvrHal_TimerSofOverflow(void);
 
 /* Include the appropriate HAL implementation */
 #if ARCH == AVR8

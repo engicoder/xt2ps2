@@ -51,8 +51,10 @@
 
 #include "console.h"
 
+#define XTH_XCVR_SOF_THRESHOLD_COUNT (XTH_XCVR_SOF_THRESHOLD * XTH_XCVR_SOF_MULTIPLIER)
+
 #define XTH_XCVR_STATUS_RECV_MASK (XTH_XCVR_STATUS_RECV_BUFFER_FULL | \
-                                   XTH_XCVR_STATUS_RECV_FRAME_ERROR )
+                                   XTH_XCVR_STATUS_RECV_OVERFLOW )
 
 /* Receive State - the state of the frame currently being received. Used by 
  * the XT clock line ISR to coordinate across interrupt calls. */
@@ -135,7 +137,6 @@ uint8_t XthXcvr_ReadReceivedData(void)
             StatusSet(XTH_XCVR_STATUS_KBD_DETECTED);
         }
 
-        XthXcvrHal_TimerResetCount();
         XthXcvrHal_ClockRelease();
 
         CONSOLE_SEND8(CON_SRC_XTH_XCVR, CON_SEV_TRACE_EVENT, CON_MSG_XTH_XCVR_RECV_SCODE, data);
@@ -162,7 +163,7 @@ void XthXcvr_SoftReset(void)
         CONSOLE_SEND0(CON_SRC_XTH_XCVR, CON_SEV_TRACE_EVENT, CON_MSG_XTH_XCVR_SOFT_RESET);
 
         _timerCount = 0;
-        XthXcvrHal_TimerStartTimeout();
+        XthXcvrHal_TimerResetStart();
     }
 }
 
@@ -170,7 +171,7 @@ void XthXcvr_SoftReset(void)
 /* ------------------------------------------------------------------------
  *  Handles the POR reset of the keyboard
  * . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . */
-void XthXcvr_HardReset(void)
+void XthXcvr_PowerOnReset(void)
 {
     XthXcvrHal_DisableClockInterrupt();
     XthXcvrHal_TimerStop();    
@@ -184,7 +185,7 @@ void XthXcvr_HardReset(void)
     CONSOLE_SEND0(CON_SRC_XTH_XCVR, CON_SEV_TRACE_EVENT, CON_MSG_XTH_XCVR_HARD_RESET);
 
     _timerCount = 0;
-    XthXcvrHal_TimerStartTimeout();
+    XthXcvrHal_TimerResetStart();
 }
 
 /* ------------------------------------------------------------------------
@@ -198,11 +199,11 @@ void XthXcvr_Enable(void)
     StatusReset();
 
     if (XTH_XCVR_POR_ON_ENABLE) {
-        XthXcvr_HardReset();
+        XthXcvr_PowerOnReset();
     } else {
         XthXcvrHal_EnableClockInterrupt();
         _timerCount = 0;
-        XthXcvrHal_TimerStartDetectSof();
+        XthXcvrHal_TimerSofStart();
         _xcvrState = XCVR_STATE_IDLE;        
     }
 }
@@ -230,11 +231,12 @@ XTH_XCVR_RESET_TIMEOUT_ISR()
         case XCVR_STATE_SOFT_RESET:
         {
             if (_timerCount >= XTH_XCVR_SOFT_RESET_DURATION) {
+                XthXcvrHal_TimerStop();
                 XthXcvrHal_ClockRelease();
 
                 XthXcvrHal_EnableClockInterrupt();
                 _timerCount = 0;
-                XthXcvrHal_TimerStartDetectSof();
+                XthXcvrHal_TimerSofStart();
                 _xcvrState = XCVR_STATE_IDLE;
                 StatusSet(XTH_XCVR_STATUS_READY);
             }
@@ -247,7 +249,9 @@ XTH_XCVR_RESET_TIMEOUT_ISR()
                 if (XTH_XCVR_RESET_LINE_ENABLE) {
                     XthXcvrHal_ResetRelease(XTH_XCVR_RESET_LINE_HAS_PULLUP);
                 }    
-            } else if (_timerCount >= XTH_XCVR_POR_DURATION) {
+            } else if (_timerCount >= XTH_XCVR_POR_DURATION &&
+                       XthXcvrHal_ClockIsHigh() &&
+                       XthXcvrHal_DataIsHigh() ) {
                 if (XTH_XCVR_SOFT_RESET_ENABLE){
                    XthXcvrHal_ClockHoldLow();
                     _timerCount = 0;
@@ -279,31 +283,25 @@ XTH_XCVR_RESET_TIMEOUT_ISR()
  * . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . */
 XTH_XCVR_CLOCK_ISR()
 {
-	static bool frameError = false;
+    bool dataLineHigh = XthXcvrHal_DataIsHigh();
 
-    bool timerOverflow = XthXcvrHal_TimerOverflow();
-    uint8_t timerCount = XthXcvrHal_TimerCount();
-    XthXcvrHal_TimerResetCount();
+    bool timerOverflow = XthXcvrHal_TimerSofOverflow();
+    uint16_t timerCount = XthXcvrHal_TimerSofCount();
+    XthXcvrHal_TimerSofCountReset();
 
-    if (timerCount > XTH_XCVR_SOF_THRESHOLD || timerOverflow) {
+    if ((timerCount > XTH_XCVR_SOF_THRESHOLD_COUNT) || timerOverflow) {
         StatusResetRecv();
         _receiveState = IDLE;
     }
 
-    /* Read the state of the data line. This will be used by several states. */
-    bool dataLineHigh = XthXcvrHal_DataIsHigh();
-
-    /* Advance the frame state */
     _receiveState++;
 
-    /* Process based on frame state */
     switch (_receiveState) 
     {
         case IDLE: /* Should never happen */
             break;
         case START1:
             _receiveRegister = 0;
-            frameError = false;
             if (XTH_XCVR_1_START_BIT) {
                 _receiveState = START2;
                 /* !!! FALLTHROUGH to START2 case !!! */
@@ -312,7 +310,7 @@ XTH_XCVR_CLOCK_ISR()
             
         case START2:
             if (!dataLineHigh) {
-                frameError = true;
+                _receiveState = IDLE;
             }
             break;
 
@@ -337,14 +335,14 @@ XTH_XCVR_CLOCK_ISR()
                  * in XthXcvr_ReadReceivedData() */
                 XthXcvrHal_ClockHoldLow();
 
-                /* If the receive buffer is full, set BUFFER_OVERFLOW status
-                * and discard data */
-                if (frameError) {
-                    StatusSet(XTH_XCVR_STATUS_RECV_FRAME_ERROR);
-                } else if (_receiveRegister == 0xAA && 
-                           !XthXcvr_StatusIsSet(XTH_XCVR_STATUS_KBD_DETECTED)) {
+                if (_receiveRegister == 0xAA &&
+                    !XthXcvr_StatusIsSet(XTH_XCVR_STATUS_KBD_DETECTED)) {
                     StatusSet(XTH_XCVR_STATUS_KBD_DETECTED);
                     XthXcvrHal_ClockRelease();
+                } else if (XthXcvr_StatusIsSet(XTH_XCVR_STATUS_RECV_BUFFER_FULL)) {
+                    /* If the receive buffer is full, set OVERFLOW status
+                    * and discard data */
+                    StatusSet(XTH_XCVR_STATUS_RECV_OVERFLOW);
                 } else {
                     /* Copy received data into receive buffer and set 
                     * BUFFER_FULL status. */

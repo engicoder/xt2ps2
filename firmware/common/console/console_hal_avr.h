@@ -49,6 +49,15 @@ static inline void ConsoleHal_Init(void)
 #else
     #error UART console not supported for this mcu.
 #endif
+
+#ifdef CONSOLE_POWER_DETECT_PORT
+    /* Configure power detect pin as and input */
+    CONSOLE_POWER_DETECT_DDR  &= ~(1 << CONSOLE_POWER_DETECT_BIT);
+
+    /* Turn off internal pullup */
+    CONSOLE_POWER_DETECT_PORT &= ~(1 << CONSOLE_POWER_DETECT_BIT);
+#endif
+
 }
 
 static inline bool ConsoleHal_TrySend(uint8_t data)
@@ -89,6 +98,15 @@ static inline bool ConsoleHal_Send(uint8_t data)
     }
     return false;
     
+}
+
+static inline bool ConsoleHal_PowerDetected(void)
+{
+#ifdef CONSOLE_POWER_DETECT_PORT
+	return ((CONSOLE_POWER_DETECT_PINS & (1 << CONSOLE_POWER_DETECT_BIT)) != 0);
+#else
+    return true;
+#endif
 }
 
 #endif /* CONSOLE_HAL_AVR_H_ */

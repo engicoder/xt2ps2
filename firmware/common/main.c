@@ -44,34 +44,37 @@ int main(void)
 
     Board_Init();
 
+#ifdef USE_CONSOLE    
 	Console_Init(CON_SEV_ERROR | CON_SEV_TRACE_EVENT | CON_SEV_TRACE_INFO);
     CONSOLE_SEND0(CON_SRC_TEST, CON_SEV_TRACE_EVENT, CON_MSG_TEST_WAITING);
 
     Console_Flush();
 
-    while(!Board_PowerDetected());
+    while(!Console_PowerDetected());
     CONSOLE_SEND0(CON_SRC_TEST, CON_SEV_TRACE_EVENT, CON_MSG_TEST_POWER_ON);
+#endif
 
     Host_Init();
 
     Device_Init(&StatusLedUpdateReceivedHandler);
-    
+
     EnableGlobalInterrupts();
 
-    Watchdog_Enable();
-
     Device_Start();
+
     Host_Start();
 
     KeyEvent hostEvent;
     KeyEvent mappedEvent;
+
+    Watchdog_Enable();
 
     while(1) 
     {
         Watchdog_Reset();
 
         Host_Update();
-		
+
         if (Host_GetKeyEvent(&hostEvent))
         {
             if(Keymap_MapToKeyEvent(&hostEvent, &mappedEvent))
@@ -90,14 +93,17 @@ int main(void)
 
         Device_Update();
 
+#ifdef USE_CONSOLE
 		Console_Update();
-
-        if (!Board_PowerDetected())
+        if (!Console_PowerDetected())
         {
             CONSOLE_SEND0(CON_SRC_TEST, CON_SEV_TRACE_EVENT, CON_MSG_TEST_POWER_OFF);
             Console_Flush();
             System_Reset();
-       }
+        }
+#endif
+
+
     }
 
     return 1;

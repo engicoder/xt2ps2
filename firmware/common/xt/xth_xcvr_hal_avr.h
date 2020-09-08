@@ -73,27 +73,68 @@
     #error XTH_XCVR_RESET_BIT not defined
 #endif
 
-#ifndef XTH_XCVR_CLOCK_INTERRUPT_VECTOR
-    #error XTH_XCVR_CLOCK_INTERRUPT_VECTOR not defined
+#define XSTR(x) #x
+#define STR(x) XSTR(x)
+
+#ifndef XTH_XCVR_CLOCK_INTERRUPT
+    #error XTH_XCVR_CLOCK_INTERRUPT not defined
 #endif
 
-#define FRAME_TIMER_PRESCALER 64
+#if XTH_XCVR_CLOCK_INTERRUPT > 3 
+    #error XTH_XCVR_CLOCK_INTERRUPT must be INT0, INT1, INT2 or INT3
+#endif
 
-#define XTH_XCVR_FRAME_TIMER_THRESHOLD ((F_CPU / FRAME_TIMER_PRESCALER * XTH_XCVR_FRAME_START_THRESHOLD) /1000000U)
+#define MAKE_VECTOR_CAT(a) INT ## a ##_vect
+#define MAKE_VECTOR(a) MAKE_VECTOR_CAT(a)  
+#define XTH_XCVR_CLOCK_INTERRUPT_VECTOR MAKE_VECTOR(XTH_XCVR_CLOCK_INTERRUPT)
 
-
+/* Reset timeout fires once per millisecond  */
 #define RESET_TIMEOUT_PRESCALER 64
+#define XTH_XCVR_RESET_TIMEOUT_MATCH ((F_CPU / RESET_TIMEOUT_PRESCALER / 1000U))
 
-#define XTH_XCVR_RESET_TIMEOUT_MATCH ((F_CPU / RESET_TIMEOUT_PRESCALER / 10000U))
+#define XTH_XCVR_SOF_PRESCALER 8
+#define XTH_XCVR_SOF_MULTIPLIER (F_CPU/XTH_XCVR_SOF_PRESCALER/1000000)
 
+static inline void XthXcvrHal_ConfigureClockInterruptTrigger(TriggerMode mode)
+{
+    switch(mode)
+    {
+        case TRIG_MODE_LOGIC_CHANGE:
+            EICRA &= ~(3 << (XTH_XCVR_CLOCK_INTERRUPT * 2));
+            EICRA |= (1 << (XTH_XCVR_CLOCK_INTERRUPT * 2)); 
+            break;
+
+        case TRIG_MODE_FALLING:
+            EICRA &= ~(3 << (XTH_XCVR_CLOCK_INTERRUPT * 2));
+            EICRA |= (2 << (XTH_XCVR_CLOCK_INTERRUPT * 2)); 
+            break;
+
+        case TRIG_MODE_RISING:
+            EICRA &= ~(3 << (XTH_XCVR_CLOCK_INTERRUPT * 2));
+            EICRA |= (3 << (XTH_XCVR_CLOCK_INTERRUPT * 2)); 
+            break;
+        default:
+            break;
+    }
+}
+
+static inline void XthXcvrHal_EnableClockInterrupt(void)
+{
+    EIMSK |= (1 << XTH_XCVR_CLOCK_INTERRUPT); 
+}
+
+static inline void XthXcvrHal_DisableClockInterrupt(void)
+{
+    EIMSK &= ~(1 << XTH_XCVR_CLOCK_INTERRUPT);
+}
 
 static inline void XthXcvrHal_ClockInit(void)
 {
-    /* Configure clock pin as and input */
-    XTH_XCVR_CLOCK_DDR  &= ~(1<<XTH_XCVR_CLOCK_BIT);
+    /* Configure clock pin as an input */
+    XTH_XCVR_CLOCK_DDR  &= ~(1 << XTH_XCVR_CLOCK_BIT);
 
     /* Enable internal pullup for clock pin */
-    XTH_XCVR_CLOCK_PORT |=  (1<<XTH_XCVR_CLOCK_BIT);
+    XTH_XCVR_CLOCK_PORT |= (1 << XTH_XCVR_CLOCK_BIT);
 
     /* Note: since we are the host, the keyboard will be driving the 
        clock line. Enable the pullup to give a default state of high.
@@ -101,9 +142,8 @@ static inline void XthXcvrHal_ClockInit(void)
 
     /* Configure generation of interrupt on falling edge with
      * interrupt disabled */
-    EICRA |= (1<<ISC01);
-    EICRA &= ~(1<<ISC00);    
-	EIMSK &= ~(1 << INT0);    
+	XthXcvrHal_DisableClockInterrupt();
+    XthXcvrHal_ConfigureClockInterruptTrigger(TRIG_MODE_FALLING);
 }
 
 static inline void XthXcvrHal_DataInit(void)
@@ -127,6 +167,11 @@ static inline void XthXcvrHal_ResetInit(void)
     XTH_XCVR_RESET_PORT &= ~(1<<XTH_XCVR_RESET_BIT);  
 }
 
+static inline bool XthXcvrHal_ClockIsHigh(void)
+{
+    return (XTH_XCVR_CLOCK_PINS & (1 << XTH_XCVR_CLOCK_BIT));
+}
+
 
 static inline void XthXcvrHal_ClockHoldLow(void)
 {
@@ -143,48 +188,9 @@ static inline void XthXcvrHal_ClockRelease(void)
 
 static inline bool XthXcvrHal_DataIsHigh(void)
 {
-    // Since we set the data pin as input, we can just read pin state
     return (XTH_XCVR_DATA_PINS & (1 << XTH_XCVR_DATA_BIT));
 }
 
-static inline void XthXcvrHal_ConfigureClockInterruptTrigger(TriggerMode mode)
-{
-    switch(mode)
-    {
-        case TRIG_MODE_LOGIC_CHANGE:
-        {
-            EICRA &= ~(1<<ISC01);
-            EICRA |= (1<<ISC00); 
-        }
-        break;
-        case TRIG_MODE_RISING:
-        {
-            EICRA |= (1<<ISC01);
-            EICRA |= (1<<ISC00);
-        }
-        break;
-        case TRIG_MODE_FALLING:
-        {
-            EICRA |= (1<<ISC01);
-            EICRA &= ~(1<<ISC00);
-        }
-        
-        break;
-        default:
-        break;
-    }
-    
-}
-
-static inline void XthXcvrHal_EnableClockInterrupt(void)
-{
-    EIMSK |= (1 << INT0); 
-}
-
-static inline void XthXcvrHal_DisableClockInterrupt(void)
-{
-	EIMSK &= ~(1 << INT0);
-}
 
 static inline void XthXcvrHal_ResetRelease(bool externalPullup)
 {
@@ -209,74 +215,57 @@ static inline void XthXcvrHal_ResetHoldLow(void)
 
 
 
-
-static inline void XthXcvrHal_TimerInit(void)
-{
-    /* Configure Timer in CTC mode */
-#if defined (__AVR_ATmega328P__)
-    TCCR2A &= ~(1 << WGM22 | 1 << WGM21 | 1 << WGM20); // normal mode
-	TCNT2 = 0; // Clear counter
-#elif defined (__AVR_ATmega32U4__)
-    TCCR1A &= ~(1 << WGM11 | 1 << WGM10); // normal mode
-    TCCR1B &= ~(1 << WGM13 | 1 << WGM12); // normal mode
-	TCNT1 = 0; // Clear counter
-#elif defined (__AVR_ATtiny85__)
-    TCCR1 = 0; // Normal mode, timer stopped.
-    TCNT1 = 0; // Clear counter
-    GTCCR =  (1 << PSR1); // Reset prescaler
-#endif
-
-}
-
-static inline void XthXcvrHal_TimerStartTimeout(void)
+static inline void XthXcvrHal_TimerResetStart(void)
 {
     /* Enable timer by setting prescaler 
 	 * Enable interrupt of TOP match */
     /* Enable timer by setting prescaler */
+    /* Enable CTC mode */
 #if defined (__AVR_ATmega328P__)
-    TCCR2B |= (1 << CS22);
+    TCCR2B |= (1 << CS22 | 1 << WGM21); /* clk/64 */
     TIMSK2 |= (1 << OCIE2A);
-    OCR2A = XTH_XCVR_RESET_TIMEOUT_MATCH; // Set CTC TOP
+    OCR2A = XTH_XCVR_RESET_TIMEOUT_MATCH;
 #elif defined (__AVR_ATmega32U4__)
-    TCCR1B |= ( 1 << CS11 | 1 << CS10);
+    TCCR1B = ( 1 << CS11 | 1 << CS10 | 1 << WGM12);  /* clk/64 */
     TIMSK1 |= (1 << OCIE1A);
     OCR1A = XTH_XCVR_RESET_TIMEOUT_MATCH;
 #elif defined (USE_TIM1_8)
-    TCCR1 |= (1 << CS12 | 1 << CS11 | 1 << CS10);
+    TCCR1 |= (1 << CS12 | 1 << CS11 | 1 << CS10 | 1 << CTC1);  /* clk/64 */
     TIMSK |=(1 << OCIE1A);
-    OCR1A = XTH_XCVR_RESET_TIMEOUT_MATCH; // Set CTC TOP
+    OCR1A = XTH_XCVR_RESET_TIMEOUT_MATCH;
+    OCR1C = XTH_XCVR_RESET_TIMEOUT_MATCH;
 #endif
 }
 
-static inline void XthXcvrHal_TimerStartDetectSof(void)
+static inline void XthXcvrHal_TimerSofStart(void)
 {
-    /* Enable timer by setting prescaler */
+    XthXcvrHal_TimerSofCountReset();
 #if defined (__AVR_ATmega328P__)
-    TCCR2B |= (1 << CS22);
+    TCCR2B |= (1 << CS21); /* clk\8 */
 #elif defined (__AVR_ATmega32U4__)
-    TCCR1B |= ( 1 << CS11 | 1 << CS10);
+    TCCR1B = (1 << CS11); /* clk\8 */
 #elif defined (__AVR_ATtiny85__)
-    TCCR1 |= (1 << CS12 | 1 << CS11 | 1 << CS10);
+    TCCR1 |= (1 << CS12); /* clk\8 */
 #endif
 }
 
 static inline void XthXcvrHal_TimerStop(void)
 {
-    /* Disable timer */
 #if defined (__AVR_ATmega328P__)
-	TCCR2B &= ~(1 << CS22 | 1 << CS21 | 1 << CS20);
-    TIMSK2 &= ~(1 << OCIE2A);
+	TCCR2B = 0;
+    TIMSK2 = 0;
 #elif defined (__AVR_ATmega32U4__)
-    TCCR1B &= ~( 1 << CS11 | 1 << CS10);
-    TIMSK1 &= ~(1 << OCIE1A);
+    TCCR1A = 0;
+    TCCR1B = 0;
+    TIMSK1 = 0;
 #elif defined (__AVR_ATtiny85__)
-    TCCR1 &= ~(1 << CS13 | 1 << CS12 | 1 << CS11 | 1 << CS10);
-    TIMSK &= ~(1 << OCIE1A);
+    TCCR1 = 0;
+    TIMSK = 0;
 #endif
 
 }
 
-static inline uint8_t XthXcvrHal_TimerCount(void)
+static inline uint16_t XthXcvrHal_TimerSofCount(void)
 {
 #if defined (__AVR_ATmega328P__)
 	return TCNT2;
@@ -288,29 +277,33 @@ static inline uint8_t XthXcvrHal_TimerCount(void)
 
 }
 
-static inline void XthXcvrHal_TimerResetCount(void)
+/* Reset counter 
+ * Clear overflow flag */
+static inline void XthXcvrHal_TimerSofCountReset(void)
 {
 #if defined (__AVR_ATmega328P__)
 	TCNT2 = 0;
-    TIFR2 |= (1 << TOV2); /* Clear overflow flag */
+    TIFR2 = (1 << TOV2);
 #elif defined (__AVR_ATmega32U4__)
     TCNT1 = 0;
-    TIFR1 |= (1 << TOV1);
+    TIFR1 = (1 << TOV1);
 #elif defined (__AVR_ATtiny85__)
     TCNT1 = 0;
-	TIFR |= (1 << TOV1); /* Clear overflow flag */
-#endif    
+	TIFR = (1 << TOV1);
+#endif
 }
 
-static inline bool XthXcvrHal_TimerOverflow(void)
+static inline bool XthXcvrHal_TimerSofOverflow(void)
 {
+    bool overflow = 
 #if defined (__AVR_ATmega328P__)
-	return ((TIFR2 & (1 << TOV2)) != 0);
+	    ((TIFR2 & (1 << TOV2)) != 0);
 #elif defined (__AVR_ATmega32U4__)
-	return ((TIFR1 & (1 << TOV1)) != 0);
+	    ((TIFR1 & (1 << TOV1)) != 0);
 #elif defined (__AVR_ATtiny85__)
-	return ((TIFR & (1 << TOV1)) != 0);
-#endif    
+        ((TIFR & (1 << TOV1)) != 0);
+#endif
+    return overflow;
 }
 
 

@@ -14,8 +14,8 @@ void Handler(char* out, ConsoleMessage* message)
 {
     switch (message->messageId)
     {
-        case CON_MSG_XTH_KBD_BAD_START_BIT:
-            sprintf(out, "Start bit error; frame ignored.");
+        case CON_MSG_XTH_KBD_RECV_OVERFLOW:
+            sprintf(out, "Receive buffer overlow.");
             break;
 
         case CON_MSG_XTH_KBD_DETECTED:
