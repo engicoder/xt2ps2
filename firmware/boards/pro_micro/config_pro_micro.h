@@ -23,16 +23,16 @@
 #define XTH_XCVR_CLOCK_DDR  DDRD
 #define XTH_XCVR_CLOCK_BIT  1
 
-// XT Data on PD1
+// XT Data on PD0
 #define XTH_XCVR_DATA_PORT PORTD
 #define XTH_XCVR_DATA_PINS PIND
 #define XTH_XCVR_DATA_DDR  DDRD
 #define XTH_XCVR_DATA_BIT  0
 
-// XT Reset on PB6
+// XT Reset on PB5
 #define XTH_XCVR_RESET_PORT PORTB
 #define XTH_XCVR_RESET_DDR  DDRB
-#define XTH_XCVR_RESET_BIT  6
+#define XTH_XCVR_RESET_BIT  5
 
 // PS2 Clock on PC6
 #define PS2D_XCVR_CLOCK_PORT PORTC
